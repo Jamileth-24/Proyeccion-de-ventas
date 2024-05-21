@@ -199,5 +199,6 @@ print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
 
 ## Conclusiones
 **Estadística descriptiva:** mediante el análisis descriptivo de nuestro dataset de ventas de 2018, podemos obtener información valiosa sobre la distribución de nuestras ventas, las características de nuestros clientes y la efectividad de nuestras estrategias de venta en diferentes países. Esto nos permite identificar áreas de mejora y tomar decisiones informadas para impulsar el éxito de nuestro negocio.
+
 ## Interpretaciones Generales
 **Estadística descriptiva:** el análisis descriptivo de las ventas de 2018 revela que Ecuador y Panamá son los mercados más grandes, con las redes sociales siendo el principal canal de venta y la transferencia electrónica el método de pago más común. Productos como "Guantes de Arquero Nike" y "Kit de cocina TrailChef" son especialmente populares, mientras que "Lidia Bueno" y "Viviana Cano" destacan entre los vendedores. Las estadísticas muestran variabilidad en las ventas y diferencias significativas entre países, ofreciendo una visión detallada para optimizar estrategias de mercado y ventas.
