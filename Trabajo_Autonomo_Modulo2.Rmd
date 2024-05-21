@@ -1,0 +1,80 @@
+---
+title: "TRABAJO AUTÓNOMO: Estadística para ciencia de datos"
+date: "2024-05-20"
+output: html_document
+---
+
+### Autores:
+
+- Cedeño Jamileth
+- Machuca Nahomi
+- Meza Winter
+- Santana Minaya
+
+### Fecha:
+
+2024-05-20
+
+### Docente:
+
+Ing. Cristian Benalcazar de la Cruz
+
+# Desarrollo de análisis y modelo estadístico
+
+## Paso 1: Descripción del dataset
+El dataset "Ventas 2018" contiene información sobre las ventas realizadas durante los años 2018 al 2022. Los campos que comprende el dataset son los siguientes:
+
+| Campo           | Descripción                                                                                              |
+|-----------------|----------------------------------------------------------------------------------------------------------|
+| PAÍS            | El país en el que se realizó la venta.                                                                  |
+| FORMA DE VENTA  | El método o canal de venta utilizado para realizar la transacción.                                       |
+| FORMA DE PAGO   | El método de pago utilizado para completar la transacción.                                               |
+| PRODUCTO        | El nombre o identificador del producto vendido.                                                          |
+| VENDEDOR        | El nombre o identificador del vendedor que realizó la venta.                                             |
+| FECHA           | La fecha en la que se realizó la venta.                                                                  |
+| VENTAS          | El monto total de la venta en la moneda local.                                                           |
+| CANTIDAD        | La cantidad de productos vendidos en la transacción.                                                     |
+| COMISIÓN        | La comisión generada por la venta para el vendedor o el intermediario.                                   |
+
+## Paso 2: Objetivo del análisis.
+
+COLOCAR OBJETIVOS AL FINAL
+
+## Paso 3: Exploración de datos.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+# Instalar y cargar el paquete readxl
+#install.packages("readxl")
+library(readxl)
+
+# Especifica la URL RAW del archivo Excel en GitHub
+url <- "https://github.com/WinterMeza/TAREA_CIENCIASDATOS/raw/main/Ventas%202018.xlsx"
+
+# Descargar el archivo temporalmente
+temp_file <- tempfile(fileext = ".xlsx")
+download.file(url, destfile = temp_file, mode = "wb")
+
+# Leer el archivo Excel
+datos <- read_excel(temp_file)
+
+# Mostrar las primeras filas del dataframe
+head(datos)
+
+# Mostrar un resumen de los datos
+summary(datos)
+
+# Ver la estructura del dataframe
+str(datos)
+
+```
+
+## Paso 4: Exploración de datos.
+## Paso 5: Estadística descriptiva.
+## Paso 6: Modelo estadístico ligado al objetivo planteado
+### Modelo 1
+### Modelo 2
+## Conclusiones
+## Interpretaciones
