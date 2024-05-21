@@ -22,19 +22,38 @@ Ing. Cristian Benalcazar de la Cruz
 # Desarrollo de análisis y modelo estadístico
 
 ## Paso 1: Descripción del dataset
-El dataset "Ventas 2018" contiene información sobre las ventas realizadas durante los años 2018 al 2022. Los campos que comprende el dataset son los siguientes:
 
-| Campo           | Descripción                                                                                              |
-|-----------------|----------------------------------------------------------------------------------------------------------|
-| PAÍS            | El país en el que se realizó la venta.                                                                  |
-| FORMA DE VENTA  | El método o canal de venta utilizado para realizar la transacción.                                       |
-| FORMA DE PAGO   | El método de pago utilizado para completar la transacción.                                               |
-| PRODUCTO        | El nombre o identificador del producto vendido.                                                          |
-| VENDEDOR        | El nombre o identificador del vendedor que realizó la venta.                                             |
-| FECHA           | La fecha en la que se realizó la venta.                                                                  |
-| VENTAS          | El monto total de la venta en la moneda local.                                                           |
-| CANTIDAD        | La cantidad de productos vendidos en la transacción.                                                     |
-| COMISIÓN        | La comisión generada por la venta para el vendedor o el intermediario.                                   |
+### Nombre del Dataset: Ventas 2018.xlsx
+### Descripción:
+El dataset Ventas 2018 recopila datos de ventas de una empresa durante un período de cinco años, desde 2018 hasta 2022. Este conjunto de datos ofrece información detallada sobre las transacciones comerciales realizadas por la empresa en ese lapso de tiempo. A continuación, se presenta una descripción general del dataset:
+
+- **Filas:** Cada fila del dataset representa una transacción de venta individual, lo que incluye información sobre el cliente, el producto o servicio vendido, la fecha y hora de la venta, el monto de la transacción, etc.
+
+- **Columnas:** Las columnas del dataset incluyen una variedad de atributos que describen cada transacción. Algunas de las columnas comunes podrían incluir:
+
+    - ID de transacción
+    - Fecha y hora de la transacción
+    - ID del cliente
+    - Nombre del cliente
+    - ID del producto
+    - Descripción del producto
+    - Cantidad vendida
+    - Precio unitario
+    - Total de ventas
+
+Los campos que comprende el dataset son los siguientes:
+
+| Campo          | Tipo de Datos | Descripción                                                            |
+|---------------|---------------|-------------------------------------------|
+| PAÍS           | character     | El país en el que se realizó la venta.                                 |
+| FORMA DE VENTA | character     | El método o canal de venta utilizado para realizar la transacción.     |
+| FORMA DE PAGO  | character     | El método de pago utilizado para completar la transacción.             |
+| PRODUCTO       | character     | El nombre del producto vendido.                                        |
+| VENDEDOR       | character     | El nombre del vendedor que realizó la venta.                           |
+| FECHA          | Date          | La fecha en la que se realizó la venta.                                |
+| VENTAS         | numeric       | El monto total de la venta en la moneda local.                         |
+| CANTIDAD       | integer       | La cantidad de productos vendidos en la transacción.                   |
+| COMISIÓN       | numeric       | La comisión generada por la venta para el vendedor o el intermediario. |
 
 ## Paso 2: Objetivo del análisis.
 
@@ -70,11 +89,115 @@ summary(datos)
 str(datos)
 
 ```
+## Paso 4: Estadística descriptiva.
+### Instalación de paquetes
 
-## Paso 4: Exploración de datos.
-## Paso 5: Estadística descriptiva.
-## Paso 6: Modelo estadístico ligado al objetivo planteado
+```{r eval=FALSE}
+# Instalamos las librerías necesarias
+install.packages("summarytools")
+install.packages("compareGroups")
+```
+
+Cargamos las librerías necesarias y leemos el dataset "Ventas 2018" desde GitHub.
+
+```{r}
+# Cargamos las librerías y datos 
+library(summarytools)
+library(readxl)
+# Leer el archivo Excel desde GitHub
+url <- "https://github.com/WinterMeza/TAREA_CIENCIASDATOS/raw/main/Ventas%202018.xlsx"
+destfile <- tempfile(fileext = ".xlsx")
+download.file(url, destfile, mode = "wb")
+ventas2018 <- read_excel(destfile)
+
+# Eliminar duplicados
+ventas2018 <- ventas2018[!duplicated(ventas2018), ]
+```
+
+### Variables categóricas
+
+Las variables categóricas nos proporciona información sobre la distribución de las categorías en cada variable. Por ejemplo, para la variable "PAÍS", podemos ver cuántas ventas se realizaron en cada país. Esto nos ayuda a entender la distribución geográfica de nuestras ventas y nos permite identificar los países con mayor y menor número de ventas. Podemos obtener un resumen para las variables categóricas con la función freq().
+
+```{r}
+freq(ventas2018[, c("PAÍS", "FORMA DE VENTA", "FORMA DE PAGO", "PRODUCTO", "VENDEDOR")], report.nas = FALSE, headings = FALSE)
+
+```
+
+**Interpretación:**
+
+1.  **País:** El análisis muestra la distribución de las ventas por país. Ecuador y Panamá parecen ser los mercados más grandes, mientras que Colombia y Honduras muestran menor participación.
+
+2.  **Forma de Venta:** La mayoría de las ventas se realizan a través de redes sociales, seguidas por teléfono y correo electrónico. La venta en punto de venta físico tiene una proporción mucho menor.
+
+3.  **Forma de Pago:** La transferencia electrónica es el método de pago más común, seguido por el efectivo, las tarjetas de crédito y los cheques.
+
+4.  **Producto:** Hay una amplia variedad de productos vendidos. Algunos productos tienen una frecuencia de ventas significativamente mayor que otros. Por ejemplo, "Guantes de Arquero Nike" y "Kit de cocina TrailChef" parecen ser populares, mientras que otros productos tienen menos ventas.
+
+5.  **Vendedor:** Se observa una distribución desigual de ventas entre los vendedores. "Lidia Bueno" y "Viviana Cano" representan la mayor parte de las ventas.
+
+### Tabla de contingencia
+
+La tabla de contingencia nos muestra cómo se distribuyen las ventas según el país y la forma de venta. Esto nos permite identificar si hay alguna relación entre estos dos factores. Por ejemplo, si observamos que ciertas formas de venta son más comunes en ciertos países, podríamos ajustar nuestras estrategias de venta en función de estas observaciones.
+
+Para crear una tabla de contingencia y ver cómo se distribuyen las ventas según el país y la forma de venta:
+
+```{r}
+ctable(ventas2018$PAÍS, ventas2018$`FORMA DE VENTA`, useNA="no", prop="r")
+```
+
+**Interpretación:** Se muestra cómo se distribuyen las ventas según el país y la forma de venta. Proporciona una perspectiva de cómo las formas de venta varían entre diferentes países.
+
+### Variables continuas
+
+Para las variables continuas, como el monto total de ventas (VENTAS), la cantidad de productos vendidos (CANTIDAD) y la comisión generada por la venta (COMISIÓN), obtenemos estadísticas descriptivas como la media, la mediana, la desviación estándar, el mínimo y el máximo.
+
+Para las variables continuas podemos usar la función descr(). Por ejemplo, para ver los principales estadísticos de la variable VENTAS:
+
+```{r}
+descr(ventas2018$VENTAS)
+```
+
+Aplicar la función descr() a todo el dataset para buscar todas las variables continuas y resumirlas:
+
+```{r}
+descr(ventas2018)
+```
+
+**Interpretación:** Se proporcionan estadísticas descriptivas para la variable continua "Ventas" y al resto de dataset. Esto incluye medidas de tendencia central (media, mediana), dispersión (rango, desviación estándar) y forma de la distribución (sesgo, curtosis).Estos estadísticos nos ayudan a comprender la distribución y la dispersión de nuestros datos. Por ejemplo, si la media de las ventas es alta, podemos inferir que en promedio se realizan ventas significativas.
+
+### Descriptiva según una variable categórica
+
+Al realizar una descriptiva de las variables continuas según una variable categórica, como "PAÍS", podemos comparar cómo varían las ventas, la cantidad de productos vendidos y la comisión generada entre diferentes países. Por ejemplo, si observamos diferencias significativas en la media de las ventas entre países, esto podría indicar que ciertos países tienen un mayor poder adquisitivo o una mayor demanda de nuestros productos.
+
+Podemos tener una descriptiva de las variables continuas según una variable categórica, como PAÍS:
+
+```{r}
+stby(ventas2018[, c("VENTAS", "CANTIDAD", "COMISION")], INDICES = ventas2018$PAÍS,
+     FUN = descr, stats = "common", transpose = TRUE)
+
+```
+
+**Interpretación:** Se desglosan las estadísticas continuas (cantidad, comisión, ventas) por país. Esto ayuda a comprender cómo difieren las ventas y las comisiones entre los países.
+
+### Resumen completo del dataset
+
+El resumen completo del dataset nos proporciona una visión general de todas las variables, tanto categóricas como continuas. Esto nos permite identificar rápidamente cualquier problema de datos, como valores atípicos o valores faltantes, y nos da una idea de la distribución y la dispersión de nuestras variables en general.
+
+Podemos resumir toda nuestra base de datos (tanto variables continuas como categóricas) con la función dfSummary():
+
+```{r}
+dfSummary(ventas2018)
+```
+```{r}
+print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
+```
+**Interpretación:** Se nos proporciona un resumen completo del dataset, incluyendo estadísticas y distribuciones para todas las variables, tanto categóricas como continuas. Esto ofrece una visión general amplia y detallada de los datos.
+
+## Paso 5: Modelo estadístico ligado al objetivo planteado
 ### Modelo 1
 ### Modelo 2
+
 ## Conclusiones
-## Interpretaciones
+**Estadística descriptiva:** mediante el análisis descriptivo de nuestro dataset de ventas de 2018, podemos obtener información valiosa sobre la distribución de nuestras ventas, las características de nuestros clientes y la efectividad de nuestras estrategias de venta en diferentes países. Esto nos permite identificar áreas de mejora y tomar decisiones informadas para impulsar el éxito de nuestro negocio.
+## Interpretaciones Generales
+**Estadística descriptiva:** el análisis descriptivo de las ventas de 2018 revela que Ecuador y Panamá son los mercados más grandes, con las redes sociales siendo el principal canal de venta y la transferencia electrónica el método de pago más común. Productos como "Guantes de Arquero Nike" y "Kit de cocina TrailChef" son especialmente populares, mientras que "Lidia Bueno" y "Viviana Cano" destacan entre los vendedores. Las estadísticas muestran variabilidad en las ventas y diferencias significativas entre países, ofreciendo una visión detallada para optimizar estrategias de mercado y ventas.
