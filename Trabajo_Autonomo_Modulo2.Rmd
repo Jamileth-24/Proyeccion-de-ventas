@@ -4,20 +4,15 @@ date: "2024-05-20"
 output: html_document
 ---
 
-### Autores:
-
+**Autores:**
 - Cedeño Jamileth
 - Machuca Nahomi
 - Meza Winter
 - Santana Minaya
+  
+**Fecha:** 2024-05-23
 
-### Fecha:
-
-2024-05-20
-
-### Docente:
-
-Ing. Cristian Benalcazar de la Cruz
+**Docente: Ing.** Cristian Benalcazar de la Cruz
 
 # Desarrollo de análisis y modelo estadístico
 
