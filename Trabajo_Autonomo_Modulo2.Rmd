@@ -57,9 +57,11 @@ COLOCAR OBJETIVOS AL FINAL
 
 ## Paso 3: Exploración de datos.
 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ```{r}
 # Instalar y cargar el paquete readxl
 #install.packages("readxl")
@@ -75,16 +77,89 @@ download.file(url, destfile = temp_file, mode = "wb")
 # Leer el archivo Excel
 datos <- read_excel(temp_file)
 
+
+```
+**limpieza de datos duplicados**
+
+A continuación se procede a realizar la limpieza de datos del dataset con el objetivo de garantizar la calidad y confiabilidad de los datos antes de realizar cualquier análisis o interpretación.
+
+```{r}
+# Limpieza de datos
+
+# Eliminar valores NA
+datos_limpio <- na.omit(datos)
+
+# Eliminar valores duplicados
+datos_limpio <- unique(datos_limpio)
+
+# Manejar valores atípicos (depende del contexto y los criterios específicos)
+
+# Por ejemplo, para identificar valores atípicos en la columna 'VENTAS':
+outliers <- boxplot(datos_limpio$VENTAS, plot = FALSE)$out
+
+# Eliminar valores atípicos (por ejemplo, valores de ventas que están muy por encima o por debajo de la media)
+datos_limpio <- datos_limpio[!datos_limpio$VENTAS %in% outliers, ]
+
+# Verificar si hay valores faltantes después de la limpieza
+any(is.na(datos_limpio))
+```
+
+**Interpretación**
+
+Como se puede observar el código anterior nos permitió realizar una limpieza básica de datos al eliminar filas con valores faltantes y duplicados, así como valores atípicos en la columna de 'VENTAS'.
+
+**Mostrar Datos**
+
+Una vez realizada la limpieza respectiva de los datos, se procede a realizar la respectiva exploración de los datos. Para esto primero mostramos las primeras filas del dataframe para asi obtener una idea rápida de cómo se estructuran los datos y qué tipo de información contiene.
+
+```{r}
 # Mostrar las primeras filas del dataframe
 head(datos)
+
+```
+
+**Resumen de los Datos**
+
+Este resumen es útil para tener una visión general de los datos y entender la distribución y características principales de cada variable en el conjunto de datos. Nos proporciona una idea rápida de la centralidad, dispersión y forma de la distribución de los datos numéricos, así como una visión general de la distribución de las variables categóricas.
+
+```{r}
 
 # Mostrar un resumen de los datos
 summary(datos)
 
+```
+
+**Mostrar estructura del Dataframe**
+
+Este punto nos proporciona información detallada sobre la estructura de los datos, incluyendo el tipo de dato de cada columna, la cantidad de observaciones (filas) y variables (columnas), y muestra los primeros valores de cada variable.
+
+```{r}
 # Ver la estructura del dataframe
 str(datos)
+```
+
+**Segmentación de datos por bloques**
+
+La segmentación de datos por bloques es una técnica poderosa que permite una exploración más detallada y un análisis más específico de conjuntos de datos grandes y complejos, facilitando la extracción de información significativa y la toma de decisiones fundamentadas.
+
+```{r}
+# Segmentación de datos por bloques
+
+# Dividir los datos en bloques basados en cierta característica o criterio
+
+# Por ejemplo, segmentar los datos por año
+años <- split(datos_limpio, format(datos_limpio$FECHA, "%Y"))
+
+# Mostrar un resumen de los datos para cada año
+lapply(años, summary)
+
 
 ```
+
+**Interpretación**
+
+En este caso nuestro conjunto de datos es de ventas y abarca varios años, por lo cual segmentarlo por año nos permite analizar las ventas, tendencias y patrones específicos de cada año individualmente.
+
 ## Paso 4: Estadística descriptiva.
 ### Instalación de paquetes
 
@@ -194,7 +269,13 @@ print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
 ### Modelo 2
 
 ## Conclusiones
+
+**Exploración de Datos:** La exploración inicial nos proporciona una comprensión general de la estructura y características de los datos, mientras que la limpieza asegura la calidad y la integridad de los mismos, eliminando errores y valores atípicos. Por otro lado, la segmentación nos permite dividir el conjunto de datos en subgrupos más manejables, lo que facilita análisis más detallados y específicos en cada segmento. Estas etapas trabajan en conjunto para garantizar que los datos estén listos para análisis posteriores.
+
 **Estadística descriptiva:** mediante el análisis descriptivo de nuestro dataset de ventas de 2018, podemos obtener información valiosa sobre la distribución de nuestras ventas, las características de nuestros clientes y la efectividad de nuestras estrategias de venta en diferentes países. Esto nos permite identificar áreas de mejora y tomar decisiones informadas para impulsar el éxito de nuestro negocio.
 
 ## Interpretaciones Generales
+
+**Exploración de Datos:** Se observa una variación en el volumen de ventas por año, siendo 2021 el año con la mayor cantidad de registros y 2020 con la menor. Además, se destacan diferencias en la distribución de las ventas entre años, con una mediana de ventas más alta en 2020 en comparación con 2018. Las comisiones generadas también varían entre años, lo que puede reflejar diferencias en las políticas de comisiones o en el desempeño de los vendedores. 
+
 **Estadística descriptiva:** el análisis descriptivo de las ventas de 2018 revela que Ecuador y Panamá son los mercados más grandes, con las redes sociales siendo el principal canal de venta y la transferencia electrónica el método de pago más común. Productos como "Guantes de Arquero Nike" y "Kit de cocina TrailChef" son especialmente populares, mientras que "Lidia Bueno" y "Viviana Cano" destacan entre los vendedores. Las estadísticas muestran variabilidad en las ventas y diferencias significativas entre países, ofreciendo una visión detallada para optimizar estrategias de mercado y ventas.
