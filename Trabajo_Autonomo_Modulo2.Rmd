@@ -79,7 +79,7 @@ datos <- read_excel(temp_file)
 
 
 ```
-**limpieza de datos duplicados**
+**Limpieza de datos duplicados**
 
 A continuación se procede a realizar la limpieza de datos del dataset con el objetivo de garantizar la calidad y confiabilidad de los datos antes de realizar cualquier análisis o interpretación.
 
