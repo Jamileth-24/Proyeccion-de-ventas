@@ -265,14 +265,89 @@ print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
 ### Modelo 1
 ### Modelo 2
 
+
+#### Regresión con una variable Categórica
+```{r}
+##INSTALACIÓN Y CRAGA DE LIBRERIAS
+#install.packages("dplyr")
+#install.packages("ggplot2")
+#install.packages("corrplot")
+library(dplyr)
+library(ggplot2)
+library(corrplot)
+
+```
+
+Este caso, el modelo a construir será para dar respuesta de qué FORMA DE VENTA es la más concurrida en Colombia, uno de los países con menor registro de VENTAS, el objetivo es conocer qué medio de venta será la opción más rentable para invertir en marketing y que este país tengo porcentajes de venta tan grandes como Ecuador. 
+
+```{r}
+##Se realiza el filtro de datos de interés, en este caso, las ventas de Colombia
+datos_ec <- datos_limpio %>% 
+        filter(PAÍS == "Colombia")
+
+# Convertir la columna FECHA a formato Date
+datos_ec$FECHA <- as.Date(datos_ec$FECHA)
+
+# Agregar una columna de año para agregar el conteo por período
+datos_ec <- datos_ec %>%
+  mutate(Anio = format(FECHA, "%Y"))
+
+#Se convierte el tipo de dato Date del campo Anio a Int para trabajar con el año en entero 
+datos_ec$Anio <- as.integer(datos_ec$Anio)
+datos_ec
+```
+
+```{r}
+##Convertir los registros del campo 'FORMA DE VENTA' en caracteres en minúsculas para unificar datos
+datos_ec <- datos_ec %>%
+  mutate(`FORMA DE VENTA` = tolower(`FORMA DE VENTA`))
+
+##Se realiza el filtro de datos de interés, en este caso, las ventas de Colombia del año 2022
+datos_2022 <- datos_ec %>% filter(datos_ec$Anio == 2022)
+```
+
+Ya con los datos filtrados y en el formato necesario, procedemos a buscar respuestas para nuestra pregunta ¿Cuál ha sido el método con mayor TENDENCIA para VENDER en COLOMBIA en el año 2022? considerando que sabemos que existe una categria de FORMA DE VENTA en nuestro dataframe
+
+```{r}
+#
+ggplot(data = datos_2022) +
+        geom_point(aes(x = `FORMA DE VENTA` , y = CANTIDAD, color = `FORMA DE VENTA`)) +
+        labs(title = "Métodos de Venta en Colombia en el año 2022",
+             y = "Cantidad de productos vendidos por pedido")
+
+```
+**Interpretación:** En la gráfica podemos observar que en Colombia las formas de hacer efectiva una venta son por medio de E-Mail, Puntos de Venta físico y Redes Sociales, siendo esta última el método con mayor tendencia en el año 2022. En la gráfica de dispersión se visualiza como variable dependiente las cantidades totales que se han vendido por cada uno de los medios mencionados;estos han sido agrupados por la variable categorica "FORMA DE VENTAS", siendo las REDES SOCIALES la categoria con mayor agrupamiento por producto y Año.  
+
+Antes de construir el modelo, se relizará la conversión del campo "Forma de ventas" a tipo FACTOR 
+```{r}
+#convertir en FACTOR los campos
+datos_2022$`FORMA DE VENTA` <- as.factor(datos_2022$`FORMA DE VENTA`)
+```
+
+Lo siguiente será construir el modelo de regresión con una variable categórica para PREDECIR la cantidad de venta que se puede aumentar por cada
+una de las FORMAS DE VENTA de mayor uso en COLOMBIA de acuerdo con los datos historicos en el año 2022.
+
+```{r}
+#Creación de modelo, 'CANTIDAD' es la variable dependiente y 'FORMA DE VENTA' la variable independiente
+modelo_exp_FVenta <- lm(CANTIDAD ~ `FORMA DE VENTA`, data = datos_2022)
+modelo_exp_FVenta
+```
+**Interpretación:** Como podemos observar, el coefiiente en la FORMA DE VENTA que se toma como referencia es el uso de E-Mail, el modelo muestra un intercepto de 7.35616, lo que significa que se espera que la cantidad sea 7.35616 cuando todas las demás variables se mantienen constantes.Por otro lado, cuando la forma sea "Punto de Venta" se estima exista una disminución de venta al contrario de la forma "Redes Sociales" que muestra un valor positivo asegurando que en comparación de E-mail y Punto de Venta, este método tendría una mayor cantidad de productos vendidos. 
+
+De acuerdo con el párrafo anterior, podemos concluir que se ha encontrado respuesta para la pregunta Cuál FORMA DE VENTA resulta ser conveniente para la inversión de marketing que permita aumentar las ventas en Colombia.  
+
 ## Conclusiones
 
 **Exploración de Datos:** La exploración inicial nos proporciona una comprensión general de la estructura y características de los datos, mientras que la limpieza asegura la calidad y la integridad de los mismos, eliminando errores y valores atípicos. Por otro lado, la segmentación nos permite dividir el conjunto de datos en subgrupos más manejables, lo que facilita análisis más detallados y específicos en cada segmento. Estas etapas trabajan en conjunto para garantizar que los datos estén listos para análisis posteriores.
 
 **Estadística descriptiva:** mediante el análisis descriptivo de nuestro dataset de ventas de 2018, podemos obtener información valiosa sobre la distribución de nuestras ventas, las características de nuestros clientes y la efectividad de nuestras estrategias de venta en diferentes países. Esto nos permite identificar áreas de mejora y tomar decisiones informadas para impulsar el éxito de nuestro negocio.
 
+**Regresión con una variable categorica:** Al usar regresión con una variable categórica como la forma de venta, podemos identificar el impacto específico de cada categoría en las ventas. En este caso, la forma de venta a través de redes sociales parece ser la que más influye en las ventas, lo que sugiere que invertir en estrategias de marketing en redes sociales podría aumentar significativamente las ventas.
+
 ## Interpretaciones Generales
 
 **Exploración de Datos:** Se observa una variación en el volumen de ventas por año, siendo 2021 el año con la mayor cantidad de registros y 2020 con la menor. Además, se destacan diferencias en la distribución de las ventas entre años, con una mediana de ventas más alta en 2020 en comparación con 2018. Las comisiones generadas también varían entre años, lo que puede reflejar diferencias en las políticas de comisiones o en el desempeño de los vendedores. 
 
 **Estadística descriptiva:** el análisis descriptivo de las ventas de 2018 revela que Ecuador y Panamá son los mercados más grandes, con las redes sociales siendo el principal canal de venta y la transferencia electrónica el método de pago más común. Productos como "Guantes de Arquero Nike" y "Kit de cocina TrailChef" son especialmente populares, mientras que "Lidia Bueno" y "Viviana Cano" destacan entre los vendedores. Las estadísticas muestran variabilidad en las ventas y diferencias significativas entre países, ofreciendo una visión detallada para optimizar estrategias de mercado y ventas.
+
+**Regresión con una variable categorica:** Los coeficientes estimados en la regresión nos permiten cuantificar el cambio esperado en las ventas para cada forma de venta en comparación con un punto de referencia (por ejemplo, ventas en una tienda física). En este caso, un coeficiente positivo para la forma de venta en redes sociales indica que esta estrategia está asociada con un aumento en las ventas en comparación con otras formas de venta, mientras que los coeficientes no significativos para otras formas de venta sugieren que su impacto en las ventas puede ser limitado.
