@@ -257,9 +257,6 @@ El resumen completo del dataset nos proporciona una visión general de todas las
 Podemos resumir toda nuestra base de datos (tanto variables continuas como categóricas) con la función dfSummary():
 
 ```{r}
-dfSummary(ventas2018)
-```
-```{r}
 print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
 ```
 **Interpretación:** Se nos proporciona un resumen completo del dataset, incluyendo estadísticas y distribuciones para todas las variables, tanto categóricas como continuas. Esto ofrece una visión general amplia y detallada de los datos.
