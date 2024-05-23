@@ -264,6 +264,138 @@ print(dfSummary(ventas2018, graph.magnif = 0.75), method = 'render')
 ## Paso 5: Modelo estadístico ligado al objetivo planteado
 ### Modelo 1
 ### Modelo 2
+## MODELO CORRELACIÓN 
+```{r}
+## Para la apliación del modelo de  correlación se debe llevar a cabo una limpieza de datos para luego hacer su exploración y finalmente la creaciòn del modelo
+
+```
+```{r}
+#Instalacion y carga de líbrerias necesarias
+install.packages("tidyverse")
+install.packages("ggplot2")
+
+library(tidyverse)
+library(ggplot2)
+```
+```{r}
+#Carga de los datos
+##Cargamos los datos en R.
+```
+```{r}
+# Reemplaza "data.csv" con la ruta de tu archivo CSV
+url <- "https://github.com/WinterMeza/TAREA_CIENCIASDATOS/raw/main/Ventas%202018.xlsx"
+
+# Descargar el archivo temporalmente
+temp_file <- tempfile(fileext = ".xlsx")
+download.file(url, destfile = temp_file, mode = "wb")
+
+# Leer el archivo Excel
+data <- read_excel(temp_file)
+
+```
+```{r}
+#Exploración inicial de los datos
+#Revisamos la estructura y un resumen de los datos.
+```
+```{r}
+str(data)
+summary(data)
+
+```
+```{r}
+#Limpieza de los datos
+##Verificamos si hay valores nulos y decidimos cómo manejarlos. También nos aseguramos de que los tipos de datos sean correctos.
+```
+```{r}
+# Revisa si hay valores nulos
+sum(is.na(data))
+
+# Convierte la columna 'FECHA' a formato Date
+data$FECHA <- as.Date(data$FECHA, format="%Y-%m-%d")
+
+# Verifica la conversión
+str(data)
+
+```
+
+```{r}
+#Selección de variables relevantes
+##Para un modelo de correlación lineal, seleccionamos las variables numéricas que nos llaman la atención. Por ejemplo, para este caso vamos a analizar  la relación entre VENTAS y COMISION.
+```
+
+```{r}
+# Selección de variables relevantes
+datos_relevantes <- data %>% select(VENTAS, COMISION)
+```
+
+```{r}
+#Análisis de correlación
+##Calculamos la correlación entre las variables seleccionadas.
+```
+```{r}
+correlacion <- cor(datos_relevantes$VENTAS, datos_relevantes$COMISION)
+print(correlacion)
+```
+```{r}
+#Visualización de los datos
+
+##Creamos un gráfico de dispersión para visualizar la relación entre VENTAS y COMISION.
+```
+
+```{r}
+ggplot(datos_relevantes, aes(x=VENTAS, y=COMISION)) +
+  geom_point() +
+  geom_smooth(method="lm", col="red") +
+  labs(title="Correlación entre Ventas y Comisión",
+       x="Ventas",
+       y="Comisión")
+
+```
+```{r}
+#Creación del modelo de regresión lineal
+##Ajustamos un modelo de regresión lineal para cuantificar la relación entre VENTAS y COMISION.
+```
+
+```{r}
+modelo <- lm(COMISION ~ VENTAS, data=datos_relevantes)
+summary(modelo)
+```
+```{r}
+#Interpretación del modelo
+#Revisamos el resumen del modelo para interpretar los coeficientes y el R-cuadrado.
+```
+```{r}
+summary(modelo)
+
+```
+```{r}
+#Predicción
+#Para este ejemplo podemos agregar una predicción con los resultados obtenidos
+
+# Datos de ejemplo para predicción
+nuevos_datos <- data.frame(VENTAS = c(50000, 100000, 150000))
+
+# Predicción
+predicciones <- predict(modelo, nuevos_datos)
+print(predicciones)
+
+```
+```{r}
+# Ajustar el modelo de regresión lineal
+modelo <- lm(COMISION ~ VENTAS, data=datos_relevantes)
+
+# Hacer predicciones usando el modelo
+datos_relevantes$PREDICCION <- predict(modelo, datos_relevantes)
+
+# Creación de  la gráfica de comparación
+ggplot(datos_relevantes, aes(x=VENTAS)) +
+  geom_point(aes(y=COMISION), color="blue", alpha=3) + # Valores observados
+  geom_line(aes(y=PREDICCION), color="red", size=1) + # Valores predichos
+  labs(title="Comparación de Ventas vs Comisión: Observado vs Predicción",
+       x="Ventas",
+       y="Comisión") +
+  theme_minimal()
+
 
 
 #### Regresión con una variable Categórica
