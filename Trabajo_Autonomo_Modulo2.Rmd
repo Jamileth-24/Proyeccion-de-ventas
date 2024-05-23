@@ -395,10 +395,14 @@ ggplot(datos_relevantes, aes(x=VENTAS)) +
        x="Ventas",
        y="Comisión") +
   theme_minimal()
-
+```
 
 
 #### Regresión con una variable Categórica
+La construcción del modelo de regresión con una variable categórica nos permitirá entender cómo influyen diferentes categorías en una variable de interés, como las cantidades vendidas. Esto es crucial para identificar qué estrategias o como distintas formas de venta, tienen mayor impacto en los resultados comerciales. 
+Utilizando esta metodología, podemos tomar decisiones informadas y dirigir recursos hacia las categorías que generan mayores ganancias.
+
+Iniciaremos por instalar las librerias necesarias
 ```{r}
 ##INSTALACIÓN Y CRAGA DE LIBRERIAS
 #install.packages("dplyr")
@@ -407,8 +411,8 @@ ggplot(datos_relevantes, aes(x=VENTAS)) +
 library(dplyr)
 library(ggplot2)
 library(corrplot)
-
 ```
+
 
 Este caso, el modelo a construir será para dar respuesta de qué FORMA DE VENTA es la más concurrida en Colombia, uno de los países con menor registro de VENTAS, el objetivo es conocer qué medio de venta será la opción más rentable para invertir en marketing y que este país tengo porcentajes de venta tan grandes como Ecuador. 
 
